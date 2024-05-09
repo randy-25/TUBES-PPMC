@@ -1,6 +1,31 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
+
+#define PI 3.141592653  // Pi constant
+
+int size;
+
+double haversine(double lintang1, double bujur1, double lintang2, double bujur2) {
+  double R = 6371; // Earth's Radius in KM
+  
+  // Convert latitudes and longitudes to radian
+  lintang1 = lintang1 * PI / 180;
+  bujur1 = bujur1 * PI / 180;
+  lintang2 = lintang2 * PI / 180;
+  bujur2 = bujur2 * PI / 180;
+
+  // Calculate the difference in latitude and longitude
+  double dLat = lintang2 - lintang1;
+  double dLon = bujur2 - bujur1;
+
+  // Haversine formula steps
+  double distance = 2*R*asin(sqrt((sin(dLat / 2) * sin(dLat / 2) + cos(lintang1) * cos(lintang2) * sin(dLon / 2) * sin(dLon / 2))));
+
+  return distance; // in km
+}
+
 
 void bacaFile(char *namaKota[100], double **lintang, double **bujur, FILE *file, int *size) {
     char *stringLine;
@@ -26,11 +51,35 @@ void bacaFile(char *namaKota[100], double **lintang, double **bujur, FILE *file,
     }
 }
 
-void printArr(char *namaKota[100], double *lintang, double *bujur, int size){
+void printArr(char *namaKota[100], double *lintang, double *bujur){
     for(int i = 0; i < size; i++){
         printf("%s , %lf, %lf\n", namaKota[i], lintang[i], bujur[i]);
     }
 }
+
+void printGraph(double **graph){
+    for(int i = 0; i < size; i++){
+        for(int j = 0; j< size; j++){
+            printf("%lf ", graph[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+void addGraph(double *lintang, double *bujur, double ***graph){
+    for(int i = 0; i < size; i++){
+        for(int j = 0; j < size; j++){
+            if(i == j){ // kalau sama
+                (*graph)[i][j] = 0.000000;
+            }else if (j < i){ // ketika sudah dihitung jarak antar 2 kota
+                (*graph)[i][j] = (*graph)[j][i];
+            }else{ // menghitung jarak 2 kota
+                (*graph)[i][j] = haversine(lintang[i], bujur[i], lintang[j], bujur[j]);
+            }            
+        }
+    }
+}
+
 
 int main(){
     char namaFile[100];
@@ -70,8 +119,30 @@ int main(){
     char *namaKota[100];
     double *lintang = NULL;
     double *bujur = NULL;
-    int size;
+    
     bacaFile(namaKota, &lintang, &bujur, file, &size);
-    printArr(namaKota, lintang, bujur, size);
+    printf("ISI FILE\n");
+    printArr(namaKota, lintang, bujur);
+
+    double **graph = (double**)malloc(size*sizeof(double*));
+    for(int i = 0; i < size; i++){
+        graph[i] = (double*)malloc(size*sizeof(double));
+    }
+    addGraph(lintang, bujur, &graph);
+    printf("\nGraph\n");
+    printGraph(graph);
+
+
+
+
+    //deallocate
+    free(lintang);
+    free(bujur);
+    for(int i = 0; i < size; i++){
+        free(graph[i]);
+    }
+    free(graph);
+    fclose(file);
+    
     return 0;
 }
