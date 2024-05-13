@@ -4,7 +4,13 @@
 
 extern int size; // Global size variable
 
-struct bfsTree *createNode(int data)
+void BFS(double **graph, char *namaKota[100], int startVertex){
+    bfsTree *root = NULL;
+    root = createTreeBFS(root, graph, startVertex);
+    findMinDistanceBFS(root, startVertex, graph, namaKota);
+    freeTreeBFS(root);
+}
+struct bfsTree *createNodeBFS(int data)
 {
     struct bfsTree *newNode = (struct bfsTree *)malloc(sizeof(struct bfsTree));
     newNode->node = data;
@@ -17,7 +23,7 @@ struct bfsTree *createNode(int data)
     return newNode;
 }
 
-int countDepth(int maxSize)
+int countDepthBFS(int maxSize)
 {
     maxSize--;
     int tempSize = maxSize;
@@ -35,10 +41,10 @@ int countDepth(int maxSize)
     return count + 1;
 }
 
-void *findParent(struct bfsTree **root, int level, int visited)
+void *findParentBFS(struct bfsTree **root, int level, int visited)
 {
     // Use a queue for BFS traversal
-    int depth = countDepth(size);
+    int depth = countDepthBFS(size);
     struct bfsTree **queue = (struct bfsTree **)malloc(sizeof(struct bfsTree *) * depth); // Adjust size based on tree depth
     int front = 0, rear = 0;
     queue[rear++] = (*root);
@@ -76,15 +82,15 @@ void *findParent(struct bfsTree **root, int level, int visited)
     free(queue);
 }
 
-struct bfsTree *createTree(struct bfsTree *root, double **adjMatrix, int startVertex)
+struct bfsTree *createTreeBFS(struct bfsTree *root, double **adjMatrix, int startVertex)
 {
     if (root == NULL)
     { // Create the root node
-        root = createNode(startVertex);
+        root = createNodeBFS(startVertex);
     }
-    BFS(&root, adjMatrix, startVertex); // for the first level
+    BFSTree(&root, adjMatrix, startVertex); // for the first level
     // Use a queue to store nodes during level order traversal
-    int depth = countDepth(size);
+    int depth = countDepthBFS(size);
     struct bfsTree **queue = (struct bfsTree **)malloc(sizeof(struct bfsTree *) * depth); // Adjust size based on tree depth
     int front = 0, rear = 0;
     queue[rear++] = root;
@@ -97,7 +103,7 @@ struct bfsTree *createTree(struct bfsTree *root, double **adjMatrix, int startVe
         while (front != rear && queue[front]->level == currentLevel)
         {
             struct bfsTree *temp = queue[front++];
-            BFS(&temp, adjMatrix, temp->node); // Recursively traverse child nodes
+            BFSTree(&temp, adjMatrix, temp->node); // Recursively traverse child nodes
             track[count++] = temp;
             track[count - 1]->completeChild = 0;
             // Enqueue child nodes for the next level
@@ -120,7 +126,7 @@ struct bfsTree *createTree(struct bfsTree *root, double **adjMatrix, int startVe
         if (level != 0)
         {
             int visited = track[i]->visited[track[i]->level - 1];
-            findParent(&tempRoot, level, visited);
+            findParentBFS(&tempRoot, level, visited);
             if (tempRoot->next == NULL)
             {
                 tempRoot = (struct bfsTree *)realloc(tempRoot, sizeof(struct bfsTree) + (size - (level)) * sizeof(struct bfsTree *));
@@ -144,7 +150,7 @@ struct bfsTree *createTree(struct bfsTree *root, double **adjMatrix, int startVe
     return root;
 }
 
-void BFS(struct bfsTree **tree, double **adjMatrix, int startVertex)
+void BFSTree(struct bfsTree **tree, double **adjMatrix, int startVertex)
 {
     int visitedSize = (*tree)->level + 1;
     int queueSize = size - (*tree)->level - 1;
@@ -182,7 +188,7 @@ void BFS(struct bfsTree **tree, double **adjMatrix, int startVertex)
     for (int i = 0; i < queueSize; i++)
     { // Process all nodes at the current level
         int currentNode = (*tree)->queue[i];
-        (*tree)->next[i] = createNode(currentNode);   // Create child node
+        (*tree)->next[i] = createNodeBFS(currentNode);   // Create child node
         (*tree)->next[i]->level = (*tree)->level + 1; // Set child level
         (*tree)->next[i]->visited = (int *)malloc(sizeof(int) * (visitedSize + 1));
         for (int j = 0; j < visitedSize; j++)
@@ -195,12 +201,7 @@ void BFS(struct bfsTree **tree, double **adjMatrix, int startVertex)
     }
 }
 
-double min(double a, double b)
-{
-    return (a < b) ? a : b;
-}
-
-void findMinDistance(struct bfsTree *tree, int startVertex, double **adjMatrix, char *namaKota[100])
+void findMinDistanceBFS(struct bfsTree *tree, int startVertex, double **adjMatrix, char *namaKota[100])
 {
     double minDistance = 9999999.99;
     int *shortestPath = (int *)malloc(sizeof(int) * (size + 1));
@@ -208,7 +209,7 @@ void findMinDistance(struct bfsTree *tree, int startVertex, double **adjMatrix, 
     {
         return; // Base case: Empty tree
     }
-    int depth = countDepth(size);
+    int depth = countDepthBFS(size);
     // Use a queue to store nodes during level order traversal
     struct bfsTree **queue = (struct bfsTree **)malloc(sizeof(struct bfsTree *) * depth); // Adjust size based on tree depth
     int front = 0, rear = 0;
@@ -257,13 +258,13 @@ void findMinDistance(struct bfsTree *tree, int startVertex, double **adjMatrix, 
     free(queue);
 }
 
-void printTree(struct bfsTree *tree)
+void printTreeBFS(struct bfsTree *tree)
 {
     if (tree == NULL)
     {
         return; // Base case: Empty tree
     }
-    int depth = countDepth(size);
+    int depth = countDepthBFS(size);
     // Use a queue to store nodes during level order traversal
     struct bfsTree **queue = (struct bfsTree **)malloc(sizeof(struct bfsTree *) * depth); // Adjust size based on tree depth
     int front = 0, rear = 0;
@@ -312,7 +313,7 @@ void printTree(struct bfsTree *tree)
     free(queue);
 }
 
-void freeTree(struct bfsTree *tree)
+void freeTreeBFS(struct bfsTree *tree)
 {
     if (tree == NULL)
     {
@@ -324,7 +325,7 @@ void freeTree(struct bfsTree *tree)
     {
         if (tree->next[i] != NULL)
         {
-            freeTree(tree->next[i]);
+            freeTreeBFS(tree->next[i]);
         }
     }
 

@@ -14,12 +14,13 @@ typedef struct bfsTree
     struct bfsTree **next; // Array of pointers to child nodes
 } bfsTree;
 
-int countDepth(int n);
-struct bfsTree *createNode(int data);
-void BFS(struct bfsTree **tree, double **adjMatrix, int startVertex);
-struct bfsTree *createTree(struct bfsTree *root, double **adjMatrix, int startVertex);
-void findMinDistance(struct bfsTree *tree, int startVertex, double **adjMatrix, char *namaKota[100]);
-void printTree(struct bfsTree *tree);
-void freeTree(struct bfsTree *tree);
+void BFS(double **graph, char *namaKota[100], int startVertex);
+int countDepthBFS(int n);
+struct bfsTree *createNodeBFS(int data);
+void BFSTree(struct bfsTree **tree, double **adjMatrix, int startVertex);
+struct bfsTree *createTreeBFS(struct bfsTree *root, double **adjMatrix, int startVertex);
+void findMinDistanceBFS(struct bfsTree *tree, int startVertex, double **adjMatrix, char *namaKota[100]);
+void printTreeBFS(struct bfsTree *tree);
+void freeTreeBFS(struct bfsTree *tree);
 
 #endif
