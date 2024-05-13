@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <time.h>
+
+#include "greedy.h"
 
 #define PI 3.141592653  // Pi constant
 
@@ -70,7 +73,7 @@ void addGraph(double *lintang, double *bujur, double ***graph){
     for(int i = 0; i < size; i++){
         for(int j = 0; j < size; j++){
             if(i == j){ // kalau sama
-                (*graph)[i][j] = 0.000000;
+                (*graph)[i][j] = 0.0;
             }else if (j < i){ // ketika sudah dihitung jarak antar 2 kota
                 (*graph)[i][j] = (*graph)[j][i];
             }else{ // menghitung jarak 2 kota
@@ -78,6 +81,16 @@ void addGraph(double *lintang, double *bujur, double ***graph){
             }            
         }
     }
+}
+
+
+int findCityIndex(char *cityName, char *namaKota[100], int size) {
+    for (int i = 0; i < size; i++) {
+        if (strcmp(cityName, namaKota[i]) == 0) {
+            return i;
+        }
+    }
+    return -1; // Jika nama kota tidak ditemukan
 }
 
 
@@ -97,6 +110,8 @@ int main(){
         printf("Format file salah");
         return 0;
     }
+    // char directory[100] = "./dataKota/";
+    // strcat(directory, namaFile);
 
     FILE *file = fopen(namaFile, "r");
 
@@ -132,9 +147,44 @@ int main(){
     printf("\nGraph\n");
     printGraph(graph);
 
+    char startingCity[100];
+    printf("\nEnter starting point: ");
+    scanf("%s", startingCity);
 
+    int startVertex = findCityIndex(startingCity, namaKota, size);
+    if (startVertex == -1) {
+        printf("Starting city not found!\n");
+        return 0;
+    }
 
+    printf("size: %d\n", size);
+    // bfsTree* root = NULL;
 
+    clock_t start = clock();
+
+    
+    // Greedy
+    greedy(graph, startVertex, namaKota);
+
+    // Brute Force
+    // bruteForce(graph, startVertex, namaKota);
+
+    //BFS
+    // BFS(graph, namaKota, startVertex);
+    
+    //DFS
+    // DFS(graph, namaKota, startVertex);
+    clock_t end = clock();
+
+    double timeElapsed = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf("Time elapsed: %.10lf s\n", timeElapsed);
+    
+
+    char key;
+    printf("Press any key to continue...");
+    scanf("%c", &key);
+    scanf("%c", &key);
+        
     //deallocate
     free(lintang);
     free(bujur);
