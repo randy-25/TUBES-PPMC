@@ -3,7 +3,11 @@
 #include <string.h>
 #include <math.h>
 #include <time.h>
+
+#include "greedy.h"
+#include "bruteforce.h"
 #include "bfs.h"
+#include "dfs.h"
 
 #define PI 3.141592653  // Pi constant
 
@@ -109,8 +113,10 @@ int main(){
         printf("Format file salah");
         return 0;
     }
+    char directory[100] = "./dataKota/";
+    strcat(directory, namaFile);
 
-    FILE *file = fopen(namaFile, "r");
+    FILE *file = fopen(directory, "r");
 
     // Cek apakah file ada
     if (file == NULL) {
@@ -155,18 +161,27 @@ int main(){
     }
 
     printf("size: %d\n", size);
-    bfsTree* root = NULL;
+    // bfsTree* root = NULL;
 
     clock_t start = clock();
-    root = createTree(root, graph, startVertex);
-    printf("root: %d\n", root->node);
-    printTree(root);
-    findMinDistance(root, startVertex, graph, namaKota);
+
+    
+    // Greedy
+    // greedy(graph, startVertex, namaKota);
+
+    // Brute Force
+    // bruteForce(graph, startVertex, namaKota);
+
+    //BFS
+    // BFS(graph, namaKota, startVertex);
+    
+    //DFS
+    // DFS(graph, namaKota, startVertex);
     clock_t end = clock();
 
     double timeElapsed = ((double)(end - start)) / CLOCKS_PER_SEC;
     printf("Time elapsed: %.10lf s\n", timeElapsed);
-    freeTree(root);
+    
 
     char key;
     printf("Press any key to continue...");
