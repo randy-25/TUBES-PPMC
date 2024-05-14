@@ -1,9 +1,9 @@
-#ifndef GREEDY_H
-#define GREEDY_H
+#ifndef GREEDY_H_
+#define GREEDY_H_
 
 extern int size;
 
-int findNearest(int startCity, double **graph, int currentCity, int *visited, int numCity, int *totalDistance);
+int findNearest(int startCity, double *graph, int currentCity, int *visited, int numCity, int *totalDistance);
 void greedy(double **graph, int startCity, char *city[100]);
 
 

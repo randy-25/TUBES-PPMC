@@ -110,10 +110,10 @@ int main(){
         printf("Format file salah");
         return 0;
     }
-    // char directory[100] = "./dataKota/";
-    // strcat(directory, namaFile);
-
-    FILE *file = fopen(namaFile, "r");
+    char directory[100] = "./dataKota/";
+    strcat(directory, namaFile);
+    
+    FILE *file = fopen(directory, "r");
 
     // Cek apakah file ada
     if (file == NULL) {
