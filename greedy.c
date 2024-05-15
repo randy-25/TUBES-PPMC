@@ -1,20 +1,18 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "greedy.h"
 #include <string.h>
+#include "greedy.h"
 
 extern int size;
 
-// #define size 5
-
-int findNearest(int startCity, double *graph, int currentCity, int *visited, int numCity, int *totalDistance){
+int findNearest(int startCityCity, double **graph, int currentCity, int *visited, int numCity, double *totalDistance) {
     double shortestPath = 999999999.0;
     int nearestCity = -1;
 
-    for(int i = 0; i < numCity; i++){
-        if(i != startCity && visited[i] == 0 && graph[i] < shortestPath){
+    for (int i = 0; i < numCity; i++) {
+        if (i != startCityCity && visited[i] == 0 && graph[currentCity][i] < shortestPath) {
             nearestCity = i;
-            shortestPath = graph[i];
+            shortestPath = graph[currentCity][i];
         }
     }
 
@@ -26,29 +24,25 @@ int findNearest(int startCity, double *graph, int currentCity, int *visited, int
     return nearestCity;
 }
 
-void greedy(double **graph, int startCity, char *city[100]){
-    int *visited = (int*)malloc(size*sizeof(int));
-    memset(visited, 0, size * sizeof(int));
-    int totalDistance = 0;
-    
-    int start = startCity - 1;
+void greedy(double **graph, int startCity, char *city[100]) {
+    int visited[size];
+    memset(visited, 0, sizeof(visited));
+    double totalDistance = 0;
 
-    printf("Jarak terpendek: %c -> ", city[start]);
-    int currentCity = start;
+    printf("Best route found: \n%s -> ", city[startCity]);
+    int currentCity = startCity;
 
-    for(int i = 0; i < size; i++){
-        if(i == (size - 1)){
-            break;
+    for (int i = 0; i < size - 1; i++) {
+        int nearest = findNearest(startCity, graph, currentCity, visited, size, &totalDistance);
+        if (nearest == -1) {
+            printf("No path found from %s\n", city[currentCity]);
+            return;
         }
-
-        int nearest = findNearest(start, graph[currentCity], currentCity, visited, size, &totalDistance);
         currentCity = nearest;
         printf("%s -> ", city[nearest]);
     }
-    totalDistance += graph[currentCity][start];
+    totalDistance += graph[currentCity][startCity];
 
-    printf("%c \n", city[start]);
-    printf("Dengan panjang: %d", totalDistance);
-
-    free(visited);
+    printf("%s \n", city[startCity]);
+    printf("Best route distance: %lf km\n", totalDistance);
 }

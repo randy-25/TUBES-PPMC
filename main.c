@@ -5,6 +5,9 @@
 #include <time.h>
 
 #include "greedy.h"
+// #include "bruteforce.h"
+// #include "bfs.h"
+// #include "dfs.h"
 
 #define PI 3.141592653  // Pi constant
 
@@ -31,7 +34,7 @@ double haversine(double lintang1, double bujur1, double lintang2, double bujur2)
 
 
 void bacaFile(char *namaKota[100], double **lintang, double **bujur, FILE *file, int *size) {
-    char *stringLine;
+    char stringLine[300];
     while(fgets(stringLine, 300, file) != NULL){
         namaKota[*size] = (char*)malloc(sizeof(char));
         if ((*lintang) == NULL && (*bujur) == NULL){
@@ -112,7 +115,7 @@ int main(){
     }
     char directory[100] = "./dataKota/";
     strcat(directory, namaFile);
-    
+
     FILE *file = fopen(directory, "r");
 
     // Cek apakah file ada
