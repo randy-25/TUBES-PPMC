@@ -5,44 +5,48 @@
 
 extern int size;
 
-int findNearest(int startCityCity, double **graph, int currentCity, int *visited, int numCity, double *totalDistance) {
-    double shortestPath = 999999999.0;
-    int nearestCity = -1;
+int isVisited(int *visited, int index){
+    for(int i = 0; i < size; i++){
+        if(*(visited + i) == index){
+            return 1;
+        }
+    }
+    return 0;
+}
 
-    for (int i = 0; i < numCity; i++) {
-        if (i != startCityCity && visited[i] == 0 && graph[currentCity][i] < shortestPath) {
-            nearestCity = i;
-            shortestPath = graph[currentCity][i];
+int findNearest(int startCityCity, double *graph, int *visited) {
+    double shortestPath = 999999999.0;
+    int minIndex = 0;
+
+    for (int i = 0; i < size; i++) {
+        if (i != startCityCity && isVisited(visited, i) == 0 && graph[i] < shortestPath) {
+            minIndex = i;
+            shortestPath = graph[i];
         }
     }
 
-    if (nearestCity != -1) {
-        visited[nearestCity] = 1;
-        *totalDistance += shortestPath;
-    }
-
-    return nearestCity;
+    return minIndex;
 }
 
 void greedy(double **graph, int startCity, char *city[100]) {
     int visited[size];
-    memset(visited, 0, sizeof(visited));
+    memset(visited, -1, size * sizeof(int));
+
     double totalDistance = 0;
-
-    printf("Best route found: \n%s -> ", city[startCity]);
     int currentCity = startCity;
+    visited[0] = startCity;
 
-    for (int i = 0; i < size - 1; i++) {
-        int nearest = findNearest(startCity, graph, currentCity, visited, size, &totalDistance);
-        if (nearest == -1) {
-            printf("No path found from %s\n", city[currentCity]);
-            return;
-        }
-        currentCity = nearest;
-        printf("%s -> ", city[nearest]);
+    for (int i = 1; i < size; i++) {
+        visited[i] = findNearest(startCity, graph[currentCity], visited);
+        totalDistance += graph[currentCity][visited[i]];
+        currentCity = visited[i];
     }
     totalDistance += graph[currentCity][startCity];
 
-    printf("%s \n", city[startCity]);
-    printf("Best route distance: %lf km\n", totalDistance);
+    printf("Best route found: ");
+    for(int i = 0; i < size; i ++){
+        printf("%s -> ", city[visited[i]]);
+    }
+    printf("%s", city[startCity]);
+    printf("\nBest route distance: %lf km\n", totalDistance);
 }

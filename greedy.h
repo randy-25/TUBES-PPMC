@@ -3,7 +3,8 @@
 
 extern int size;
 
-int findNearest(int startCity, double **graph, int currentCity, int *visited, int numCity, double *totalDistance);
+int isVisited(int *visited, int index);
+int findNearest(int currentCity, double *graph, int *visited);
 void greedy(double **graph, int startCity, char *city[100]);
 
 
