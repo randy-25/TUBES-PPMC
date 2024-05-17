@@ -1,4 +1,4 @@
-# compile dengan gcc main.c "namafileFungsi".c -o "namafileExe"
+# Compile gunakan makefile, jika pakai linux atau mac, ganti del pada clean makefile menjadi rm untuk melakukan perintah make clean
 
 ## BEBERAPA NOTES
 #### hati hati sama DFS karena cabang tree yang distancenya lebih sedikit ga diapus, jadi intinya ngeexpand adjacent matrix nya jadi tree, dengan traversal dfs, ini ngebuat memori yg dipake banyak bgt dan bikin laptop crash :v. Aku nyoba sampe 10 kota dia aman, tapi pas 12 kota udh bahaya
