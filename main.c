@@ -4,14 +4,151 @@
 #include <math.h>
 #include <time.h>
 
-#include "greedy.h"
-#include "bruteforce.h"
-#include "bfs.h"
-#include "dfs.h"
+#include "greedy.c"
+#include "bruteforce.c"
+#include "bfs.c"
+#include "dfs.c"
 
 #define PI 3.141592653  // Pi constant
 
 int size;
+
+double haversine(double lintang1, double bujur1, double lintang2, double bujur2);
+void bacaFile(char *namaKota[100], double **lintang, double **bujur, FILE *file, int *size);
+void printArr(char *namaKota[100], double *lintang, double *bujur);
+void addGraph(double *lintang, double *bujur, double ***graph);
+void printGraph(double **graph);
+int findCityIndex(char *city, char *namaKota[100], int size);
+int checkFileName(char *namaFile);
+
+
+int main(){
+    char namaFile[100];
+
+    printf("Masukkan File: ");
+    // scanf("%s", namaFile);
+    fgets(namaFile, 100, stdin);
+    namaFile[strcspn(namaFile, "\n")] = '\0';
+
+    // cek format nama file
+    int hasilCek = checkFileName(namaFile);
+    if(hasilCek == 1){
+        return 0;
+    }
+
+    char directory[100] = "./dataKota/";
+    strcat(directory, namaFile);
+
+    // Pembacaan File dan Validasi File
+    FILE *file = fopen(directory, "r");
+    // Cek apakah file ada
+    if (file == NULL) {
+        printf("File tidak ada!\n");
+        return 0;
+    }
+
+    // cek apakah file kosong
+    int lenFile;
+    fseek(file, 0, SEEK_END);
+
+    lenFile = ftell(file);
+    if (lenFile == 0){
+        printf("File kosong\n");
+        return 0;
+    }
+
+    fseek(file, 0, SEEK_SET); // set kursor kembali ke awal file
+    // Akhir pembacaan file dan validasi file
+
+    // Pembacaan Map
+    char *namaKota[100];
+    double *lintang = NULL;
+    double *bujur = NULL;
+    
+    bacaFile(namaKota, &lintang, &bujur, file, &size);
+    printf("ISI FILE\n");
+    printArr(namaKota, lintang, bujur);
+
+    // alokasi memori graph
+    double **graph = (double**)malloc(size*sizeof(double*));
+    for(int i = 0; i < size; i++){
+        graph[i] = (double*)malloc(size*sizeof(double));
+    }
+    addGraph(lintang, bujur, &graph);
+    // printf("\nGraph\n");
+    // printGraph(graph);
+
+    char startingCity[100];
+    printf("\nEnter starting point: ");
+    fgets(startingCity, 100, stdin);
+    startingCity[strcspn(startingCity, "\n")] = '\0';
+
+    int startVertex = findCityIndex(startingCity, namaKota, size);
+    if (startVertex == -1) {
+        printf("Starting city not found!\n");
+        return 0;
+    }
+    
+    // Pemilihan Algoritma
+    printf("Pilih Algoritma: \n");
+    printf("1. Greedy\n");
+    printf("2. Brute Force\n");
+    printf("3. BFS\n");
+    printf("4. DFS\n");
+    printf("Pilihan: ");
+    int pilihan;
+    scanf("%d", &pilihan);
+    if(pilihan < 1 || pilihan > 4){
+        printf("Pilihan tidak valid\n");
+        return 0;
+    }
+
+    // Algoritma dan Pengukuran Waktu
+    clock_t start, end;
+    switch (pilihan){
+        case 1:
+            start = clock();
+            greedy(graph, startVertex, namaKota);
+            end = clock();
+            break;
+        case 2:
+            start = clock();
+            bruteForce(graph, startVertex, namaKota);
+            end = clock();
+            break;
+        case 3:
+            start = clock();
+            BFS(graph, namaKota, startVertex);
+            end = clock();
+            break;
+        case 4:
+            start = clock();
+            DFS(graph, namaKota, startVertex);
+            end = clock();
+            break;
+    }
+
+    double timeElapsed = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf("Time elapsed: %.10lf s\n", timeElapsed);
+    
+    getchar();
+    char key;
+    printf("Press any key to continue...");
+    scanf("%c", &key);
+    
+        
+    //deallocate
+    free(lintang);
+    free(bujur);
+    for(int i = 0; i < size; i++){
+        free(graph[i]);
+    }
+    free(graph);
+    fclose(file);
+    
+    return 0;
+}
+
 
 double haversine(double lintang1, double bujur1, double lintang2, double bujur2) {
   double R = 6371; // Earth's Radius in KM
@@ -31,7 +168,6 @@ double haversine(double lintang1, double bujur1, double lintang2, double bujur2)
 
   return distance; // in km
 }
-
 
 void bacaFile(char *namaKota[100], double **lintang, double **bujur, FILE *file, int *size) {
     char *stringLine;
@@ -86,7 +222,6 @@ void addGraph(double *lintang, double *bujur, double ***graph){
     }
 }
 
-
 int findCityIndex(char *cityName, char *namaKota[100], int size) {
     for (int i = 0; i < size; i++) {
         if (strcmp(cityName, namaKota[i]) == 0) {
@@ -96,12 +231,17 @@ int findCityIndex(char *cityName, char *namaKota[100], int size) {
     return -1; // Jika nama kota tidak ditemukan
 }
 
-
-int main(){
-    char namaFile[100];
-
-    printf("Masukkan File: ");
-    scanf("%s", namaFile);
+int checkFileName(char *namaFile){
+    // cek pertama ada format file atau tidak
+    if (strchr(namaFile, '.') == NULL) {
+        printf("Berikan format file!!!\n");
+        return 1;
+    }
+    // cek jika ada spasi
+    if(strchr(namaFile, ' ') != NULL){
+        printf("Nama file tidak boleh mengandung spasi!!!\n");
+        return 1;
+    }
     char tokenStr[100];
     strcpy(tokenStr, namaFile);
     char *token;
@@ -111,91 +251,6 @@ int main(){
     // cek format file
     if(strcmp(token, "csv") != 0){
         printf("Format file salah");
-        return 0;
+        return 1;
     }
-    char directory[100] = "./dataKota/";
-    strcat(directory, namaFile);
-
-    FILE *file = fopen(directory, "r");
-
-    // Cek apakah file ada
-    if (file == NULL) {
-        printf("File tidak ada!\n");
-        return 0;
-    }
-
-    int lenFile;
-    fseek(file, 0, SEEK_END);
-
-    lenFile = ftell(file);
-    if (lenFile == 0){
-        printf("File kosong\n");
-        return 0;
-    }
-
-    fseek(file, 0, SEEK_SET);
-    char *namaKota[100];
-    double *lintang = NULL;
-    double *bujur = NULL;
-    
-    bacaFile(namaKota, &lintang, &bujur, file, &size);
-    printf("ISI FILE\n");
-    printArr(namaKota, lintang, bujur);
-
-    double **graph = (double**)malloc(size*sizeof(double*));
-    for(int i = 0; i < size; i++){
-        graph[i] = (double*)malloc(size*sizeof(double));
-    }
-    addGraph(lintang, bujur, &graph);
-    printf("\nGraph\n");
-    printGraph(graph);
-
-    char startingCity[100];
-    printf("\nEnter starting point: ");
-    scanf("%s", startingCity);
-
-    int startVertex = findCityIndex(startingCity, namaKota, size);
-    if (startVertex == -1) {
-        printf("Starting city not found!\n");
-        return 0;
-    }
-
-    printf("size: %d\n", size);
-    // bfsTree* root = NULL;
-
-    clock_t start = clock();
-
-    
-    // Greedy
-    // greedy(graph, startVertex, namaKota);
-
-    // Brute Force
-    // bruteForce(graph, startVertex, namaKota);
-
-    //BFS
-    // BFS(graph, namaKota, startVertex);
-    
-    //DFS
-    // DFS(graph, namaKota, startVertex);
-    clock_t end = clock();
-
-    double timeElapsed = ((double)(end - start)) / CLOCKS_PER_SEC;
-    printf("Time elapsed: %.10lf s\n", timeElapsed);
-    
-
-    char key;
-    printf("Press any key to continue...");
-    scanf("%c", &key);
-    scanf("%c", &key);
-        
-    //deallocate
-    free(lintang);
-    free(bujur);
-    for(int i = 0; i < size; i++){
-        free(graph[i]);
-    }
-    free(graph);
-    fclose(file);
-    
-    return 0;
 }
