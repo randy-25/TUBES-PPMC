@@ -4,10 +4,10 @@
 #include <math.h>
 #include <time.h>
 
-#include "greedy.c"
-#include "bruteforce.c"
-#include "bfs.c"
-#include "dfs.c"
+#include "greedy.h"
+#include "bruteforce.h"
+#include "bfs.h"
+#include "dfs.h"
 
 #define PI 3.141592653  // Pi constant
 
