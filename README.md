@@ -1,5 +1,6 @@
-# compile dengan gcc main.c "namafileFungsi".c -o "namafileExe"
-## hati hati sama DFS karena cabang tree yang distancenya lebih sedikit ga diapus, jadi intinya ngeexpand adjacent matrix nya jadi tree, dengan traversal dfs, ini ngebuat memori yg dipake banyak bgt dan bikin laptop crash :v. Aku nyoba sampe 10 kota dia aman, tapi pas 12 kota udh bahaya
+# Compile dapat dilakukan dengan hanya compile main filenya saja, juga bisa dirun lewat tombol run vscode
+
+## hati hati sama DFS karena cabang tree yang distancenya lebih sedikit ga diapus, jadi intinya ngeexpand adjacent matrix nya jadi tree, dengan traversal dfs, ini ngebuat memori yg dipake banyak bgt dan bikin laptop crash :v. Aku nyoba sampe 11 kota dia aman, tapi pas 12 kota udh bahaya
 
 ## buat bfs, run pake yg bisa dirun tombol vscode aja, gara2 perlu nyiapin memori yg gede, filenya ga siap, jadinya bakal segmentation fault, atau ga coba file exenya pake data csv "data1.csv", run 2 kali, yang pertama biasanya gagal, yang ke2 berhasil, mungkin pas kedua dia udah nyiapin memori yg diperlukannya
 
