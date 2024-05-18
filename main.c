@@ -8,6 +8,7 @@
 #include "bruteforce.h"
 #include "bfs.h"
 #include "dfs.h"
+#include "antColony.h"
 
 #define PI 3.141592653  // Pi constant
 
@@ -95,10 +96,11 @@ int main(){
     printf("2. Brute Force\n");
     printf("3. BFS\n");
     printf("4. DFS\n");
+    printf("5. Ant Colony\n");
     printf("Pilihan: ");
     int pilihan;
     scanf("%d", &pilihan);
-    if(pilihan < 1 || pilihan > 4){
+    if(pilihan < 1 || pilihan > 5){
         printf("Pilihan tidak valid\n");
         return 0;
     }
@@ -124,6 +126,11 @@ int main(){
         case 4:
             start = clock();
             DFS(graph, namaKota, startVertex);
+            end = clock();
+            break;
+        case 5:
+            start = clock();
+            antCol(graph, startVertex, namaKota);
             end = clock();
             break;
     }
