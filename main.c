@@ -10,6 +10,7 @@
 #include "dfs.h"
 #include "antColony.h"
 #include "branchnbound.h"
+#include "genetic.h"
 
 #define PI 3.141592653  // Pi constant
 
@@ -99,10 +100,11 @@ int main(){
     printf("4. DFS\n");
     printf("5. Ant Colony\n");
     printf("6. Branch and Bound\n");
+    printf("7. Genetic Algorithm\n");
     printf("Pilihan: ");
     int pilihan;
     scanf("%d", &pilihan);
-    if(pilihan < 1 || pilihan > 6){
+    if(pilihan < 1 || pilihan > 7){
         printf("Pilihan tidak valid\n");
         return 0;
     }
@@ -138,6 +140,11 @@ int main(){
         case 6:
             start = clock();
             BranchnBound(graph, startVertex, namaKota);
+            end = clock();
+            break;
+        case 7:
+            start = clock();
+            geneticAlgorithm(graph, startVertex, namaKota);
             end = clock();
             break;
     }
@@ -264,7 +271,7 @@ int checkFileName(char *namaFile){
     token = strtok(NULL, ".");
     // cek format file
     if(strcmp(token, "csv") != 0){
-        printf("Format file salah");
+        printf("Format file salah!!!");
         return 1;
     }
 }

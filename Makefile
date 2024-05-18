@@ -1,5 +1,5 @@
-output: main.o greedy.o bruteforce.o bfs.o dfs.o antColony.o branchnbound.o
-	gcc main.o greedy.o bruteforce.o bfs.o dfs.o antColony.o branchnbound.o -lm -o app
+output: main.o greedy.o bruteforce.o bfs.o dfs.o antColony.o branchnbound.o genetic.o
+	gcc main.o greedy.o bruteforce.o bfs.o dfs.o antColony.o branchnbound.o genetic.o -lm -o app
 
 main.o: main.c
 	gcc -c main.c
@@ -21,6 +21,9 @@ antColony.o: antColony.c antColony.h
 
 branchnbound.o: branchnbound.c branchnbound.h
 	gcc -c branchnbound.c
+
+genetic.o: genetic.c genetic.h
+	gcc -c genetic.c
 
 clean:
 	del *.o app.exe

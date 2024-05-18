@@ -1,6 +1,6 @@
 #ifndef GENETIC_H_
 #define GENETIC_H_
-#include "genetic.c"
+
 extern int size;
 
 double fitness(int *route, double **graph);
