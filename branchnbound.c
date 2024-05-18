@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 extern int size;
 
@@ -56,24 +57,33 @@ void BranchnBoundRec(double **graph, double *final_res, double curr_bound, doubl
 
     // Untuk level selain size, dilakukan iterasi untuk membuat search space tree
     for (int i = 0; i < size; i++) {
+        // Menghitung vertex selanjutnya yang memiliki isi dan belum di-visit
         if (graph[curr_path[level-1]][i] != 0 && visited[i] == 0) {
             double temp = curr_bound;
             curr_weight += graph[curr_path[level-1]][i];
-
+            /*  Jika level = 1, maka perhitungan lower bound dikurangi dengan least cost node
+                dan yang saat ini dijumlah dan kemudian dibagi 2
+            */
             if (level == 1) {
                 curr_bound -= ((firstMin(graph, curr_path[level-1]) + firstMin(graph, i)) /2);
             }
+            /*  Selain level 1, maka perhitungan lower bound dikurangi dengan least cost node kedua
+                dan least cost node saat ini. Digunakan least cost node kedua karena least cost node
+                pertama sudah di-include di sebelumnya
+            */
             else {
                 curr_bound -= ((secondMin(graph, curr_path[level-1]) + firstMin(graph, i)) /2);
             }
-            
+            /*  Jika distance saat ini kurang dari final_res (distance terbaik yang sudah disimpan),
+                maka node di-consider dan dilakukan rekursif pada node tersebut
+            */
             if (curr_bound + curr_weight < *final_res) {
                 curr_path[level] = i;
                 visited[i] = 1;
 
                 BranchnBoundRec(graph, final_res, curr_bound, curr_weight, level+1, curr_path, final_path, visited, startvertex);
             }
-
+            // Jika tidak, maka nilai dikembalikan ke keadaan awal
             curr_weight -= graph[curr_path[level-1]][i];
             curr_bound = temp;
 
@@ -87,6 +97,7 @@ void BranchnBoundRec(double **graph, double *final_res, double curr_bound, doubl
 }
 
 void BranchnBound(double **graph, int startvertex, char *cityName[100]) {
+    // Inisialisasi array visited, path, final path, lower bound, dan final_res
     int visited[size];
     memset(visited, 0, sizeof(visited));
     int path[size+1];
@@ -94,18 +105,18 @@ void BranchnBound(double **graph, int startvertex, char *cityName[100]) {
     int final_path[size+1];
     memset(final_path, 0, sizeof(final_path));
     double curr_bound = 0;
-    double final_res = 99999999.99;
-
+    double finalDistance = 99999999.99;
+    // Perhitungan lower bound awal
     for (int i = 0; i < size; i++) {
         curr_bound += (firstMin(graph, i) + secondMin(graph, i));
     }
-
-    curr_bound = curr_bound/2;
+    // Pembulatan lower bound. Berbeda kasus jika lower bound ganjil atau genap
+    curr_bound = (fmod(curr_bound, 2.0) != 0) ? floor(curr_bound / 2.0) + 1.0 : curr_bound / 2.0;
     visited[startvertex] = 1;
     path[0] = startvertex;
-
-    BranchnBoundRec(graph, &final_res, curr_bound, 0, 1, path, final_path, visited, startvertex);
-    
+    // Rekursif Branch and Bound
+    BranchnBoundRec(graph, &finalDistance, curr_bound, 0, 1, path, final_path, visited, startvertex);
+    // Mencetak path taken dan distance
     printf("Best route found:\n");
     printf("Path Taken: ");
     for (int i = 0; i <= size; i++) {
@@ -115,5 +126,5 @@ void BranchnBound(double **graph, int startvertex, char *cityName[100]) {
         }
         else printf(" -> ");
     }
-    printf("Best route distance: %lf km\n", final_res);
+    printf("Best route distance: %lf km\n", finalDistance);
 }
