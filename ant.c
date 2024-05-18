@@ -225,8 +225,10 @@ int main() {
         printf("Format file salah");
         return 0;
     }
+    char directory[100] = "./dataKota/";
+    strcat(directory, namaFile);
 
-    FILE *file = fopen(namaFile, "r");
+    FILE *file = fopen(directory, "r");
 
     // Cek apakah file ada
     if (file == NULL) {
@@ -261,19 +263,19 @@ int main() {
     printGraph(graph);
 
     // memberi penanda pada setiap jalur yang ada
-    double **Penanda = (double**)malloc(size * sizeof(double*));
-    double **deltaPenanda = (double**)malloc(size * sizeof(double*));
-    for (int i = 0; i < size; i++) {
-        Penanda[i] = (double*)malloc(size * sizeof(double));
-        deltaPenanda[i] = (double*)malloc(size * sizeof(double));
-        for (int j = 0; j < size; j++) {
-            Penanda[i][j] = 1.0; // Initial level penanda 
-            deltaPenanda[i][j] = 0.0;
-        }
-    }
+    // double **Penanda = (double**)malloc(size * sizeof(double*));
+    // double **deltaPenanda = (double**)malloc(size * sizeof(double*));
+    // for (int i = 0; i < size; i++) {
+    //     Penanda[i] = (double*)malloc(size * sizeof(double));
+    //     deltaPenanda[i] = (double*)malloc(size * sizeof(double));
+    //     for (int j = 0; j < size; j++) {
+    //         Penanda[i][j] = 1.0; // Initial level penanda 
+    //         deltaPenanda[i][j] = 0.0;
+    //     }
+    // }
 
-    int *bestTour = (int*)malloc(size * sizeof(int));
-    double bestTourLength = -1;
+    // int *bestTour = (int*)malloc(size * sizeof(int));
+    // double bestTourLength = -1;
 
     char startingCity[100];
     printf("Masukkan Kota Awal: ");
@@ -286,52 +288,52 @@ int main() {
         return 0;
     }
 
-    // Run Ant Colony Optimization
-    srand(time(NULL)); // Initialize random seed
-    antColonyOptimization(graph, Penanda, deltaPenanda, bestTour, &bestTourLength);
+    // // Run Ant Colony Optimization
+    // srand(time(NULL)); // Initialize random seed
+    // antColonyOptimization(graph, Penanda, deltaPenanda, bestTour, &bestTourLength);
 
-    // mencari urutan kota dengan rute terbaik
-    int *bestTourIndices = (int*)malloc(size * sizeof(int));
-    findBestTourIndices(bestTour, bestTourIndices, namaKota, size);
+    // // mencari urutan kota dengan rute terbaik
+    // int *bestTourIndices = (int*)malloc(size * sizeof(int));
+    // findBestTourIndices(bestTour, bestTourIndices, namaKota, size);
 
     // mencari indeks kota awal pada urutan kota dengan rute terbaik
-    int startIndexInTour = -1;
-    for (int i = 0; i < size; i++) {
-        if (bestTour[i] == startingIndex) {
-            startIndexInTour = i;
-            break;
-        }
-    }
-    if (startIndexInTour == -1) {
-        printf("Kota awal tidak ditemukan dalam tur terbaik.\n");
-        return 0;
-    }
+    // int startIndexInTour = -1;
+    // for (int i = 0; i < size; i++) {
+    //     if (bestTour[i] == startingIndex) {
+    //         startIndexInTour = i;
+    //         break;
+    //     }
+    // }
+    // if (startIndexInTour == -1) {
+    //     printf("Kota awal tidak ditemukan dalam tur terbaik.\n");
+    //     return 0;
+    // }
     
     clock_t start = clock();
     // Print the best tour dimulai dari kota awal
-    printf("\nBest Tour starting from %s: ", startingCity);
-    for (int i = 0; i < size; i++) {
-        printf("%s -> ", namaKota[bestTourIndices[(startIndexInTour + i) % size]]);
-    }
-    printf("%s\n", namaKota[bestTourIndices[startIndexInTour]]); // Print kota awal sebagai akhir rute
+    // printf("\nBest Tour starting from %s: ", startingCity);
+    // for (int i = 0; i < size; i++) {
+    //     printf("%s -> ", namaKota[bestTourIndices[(startIndexInTour + i) % size]]);
+    // }
+    // printf("%s\n", namaKota[bestTourIndices[startIndexInTour]]); // Print kota awal sebagai akhir rute
 
-    printf("Best Tour Length: %.2lf km\n", bestTourLength);
+    // printf("Best Tour Length: %.2lf km\n", bestTourLength);
     clock_t end = clock();
     // Deallocate memory
     free(lintang);
     free(bujur);
-    free(bestTourIndices);
-    for (int i = 0; i < size; i++) {
-        free(graph[i]);
-        free(Penanda[i]);
-        free(deltaPenanda[i]);
-    }
+    // free(bestTourIndices);
+    // for (int i = 0; i < size; i++) {
+    //     free(graph[i]);
+    //     free(Penanda[i]);
+    //     free(deltaPenanda[i]);
+    // }
     
     double timeElapsed = ((double)(end - start)) / CLOCKS_PER_SEC;
     printf("Time elapsed: %.10lf s\n", timeElapsed);
     free(graph);
-    free(Penanda);
-    free(deltaPenanda);
+    // free(Penanda);
+    // free(deltaPenanda);
     fclose(file);
 
     return 0;

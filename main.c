@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <time.h>
+#include "antColony.h"
 
 #define PI 3.141592653  // Pi constant
 
@@ -132,8 +134,11 @@ int main(){
     printf("\nGraph\n");
     printGraph(graph);
 
-
-
+    clock_t start = clock();
+    antCol(graph, 0, namaKota);
+    clock_t end = clock();
+    double time = (double)(end - start) / CLOCKS_PER_SEC;
+    printf("Time: %lf\n", time);
 
     //deallocate
     free(lintang);
