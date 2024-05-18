@@ -9,6 +9,7 @@
 #include "bfs.h"
 #include "dfs.h"
 #include "antColony.h"
+#include "branchnbound.h"
 
 #define PI 3.141592653  // Pi constant
 
@@ -97,10 +98,11 @@ int main(){
     printf("3. BFS\n");
     printf("4. DFS\n");
     printf("5. Ant Colony\n");
+    printf("6. Branch and Bound\n");
     printf("Pilihan: ");
     int pilihan;
     scanf("%d", &pilihan);
-    if(pilihan < 1 || pilihan > 5){
+    if(pilihan < 1 || pilihan > 6){
         printf("Pilihan tidak valid\n");
         return 0;
     }
@@ -131,6 +133,11 @@ int main(){
         case 5:
             start = clock();
             antCol(graph, startVertex, namaKota);
+            end = clock();
+            break;
+        case 6:
+            start = clock();
+            BranchnBound(graph, startVertex, namaKota);
             end = clock();
             break;
     }
