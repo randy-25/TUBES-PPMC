@@ -1,3 +1,8 @@
+/*
+Nama : Randy Revaldo Pratama
+NIM  : 13222012
+Header File dari bfs.c untuk penghubung ke main program
+*/
 #ifndef BFS_H
 #define BFS_H
 

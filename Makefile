@@ -26,4 +26,4 @@ genetic.o: genetic.c genetic.h
 	gcc -c genetic.c
 
 clean:
-	del *.o app.exe
+	del *.o
