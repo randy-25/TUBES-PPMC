@@ -111,11 +111,17 @@ int findCityIndex(char *cityName, char *namaKota[100], int size) {
 }
 
 
-int main(){
-    char namaFile[100];
-
-    printf("Masukkan File: ");
-    scanf("%s", namaFile);
+int checkFileName(char *namaFile){
+    // cek pertama ada format file atau tidak
+    if (strchr(namaFile, '.') == NULL) {
+        printf("Berikan format file!!!\n");
+        return 1;
+    }
+    // cek jika ada spasi
+    if(strchr(namaFile, ' ') != NULL){
+        printf("Nama file tidak boleh mengandung spasi!!!\n");
+        return 1;
+    }
     char tokenStr[100];
     strcpy(tokenStr, namaFile);
     char *token;
@@ -124,21 +130,37 @@ int main(){
     token = strtok(NULL, ".");
     // cek format file
     if(strcmp(token, "csv") != 0){
-        printf("Format file salah");
+        printf("Format file salah!!!");
+        return 1;
+    }
+}
+
+int main(){
+    char namaFile[100];
+
+    printf("Masukkan File: ");
+    // scanf("%s", namaFile);
+    fgets(namaFile, 100, stdin);
+    namaFile[strcspn(namaFile, "\n")] = '\0';
+
+    // cek format nama file
+    int hasilCek = checkFileName(namaFile);
+    if(hasilCek == 1){
         return 0;
     }
 
     char directory[100] = "./dataKota/";
     strcat(directory, namaFile);
 
+    // Pembacaan File dan Validasi File
     FILE *file = fopen(directory, "r");
-
     // Cek apakah file ada
     if (file == NULL) {
         printf("File tidak ada!\n");
         return 0;
     }
 
+    // cek apakah file kosong
     int lenFile;
     fseek(file, 0, SEEK_END);
 
@@ -148,7 +170,10 @@ int main(){
         return 0;
     }
 
-    fseek(file, 0, SEEK_SET);
+    fseek(file, 0, SEEK_SET); // set kursor kembali ke awal file
+    // Akhir pembacaan file dan validasi file
+
+    // Pembacaan Map
     char *namaKota[100];
     double *lintang = NULL;
     double *bujur = NULL;
@@ -157,17 +182,19 @@ int main(){
     printf("ISI FILE\n");
     printArr(namaKota, lintang, bujur);
 
+    // alokasi memori graph
     double **graph = (double**)malloc(size*sizeof(double*));
     for(int i = 0; i < size; i++){
         graph[i] = (double*)malloc(size*sizeof(double));
     }
     addGraph(lintang, bujur, &graph);
-    printf("\nGraph\n");
-    printGraph(graph);
+    // printf("\nGraph\n");
+    // printGraph(graph);
 
     char startingCity[100];
     printf("\nEnter starting point: ");
-    scanf("%s", startingCity);
+    fgets(startingCity, 100, stdin);
+    startingCity[strcspn(startingCity, "\n")] = '\0';
 
     int startVertex = findCityIndex(startingCity, namaKota, size);
     if (startVertex == -1) {
@@ -175,12 +202,10 @@ int main(){
         return 0;
     }
 
-    printf("size: %d\n", size);
     
     clock_t start = clock();
     bfsTree* root = NULL;
     root = createTree(root, graph, startVertex);
-    printf("root: %d\n", root->node);
     printTree(root);
     findMinDistance(root, startVertex, graph, namaKota);
     clock_t end = clock();
@@ -445,7 +470,7 @@ void findMinDistance(struct bfsTree *tree, int startVertex, double **adjMatrix, 
             }
         }
     }
-    printf("Min Distance: %lf\n", minDistance);
+    printf("Min Distance: %lf km\n", minDistance);
     printf("The shortest path is: ");
     for (int i = 0; i < size; i++)
     {
