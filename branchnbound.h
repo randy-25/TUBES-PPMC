@@ -1,3 +1,9 @@
+/*
+    Nama                : Nabiel Aufi Danendra
+    NIM                 : 13222005
+    Deskripsi Program   : Header file dari branchnbound.c untuk menghubungkan dengan main program
+*/
+
 #ifndef BNB_H
 #define BNB_H
 
