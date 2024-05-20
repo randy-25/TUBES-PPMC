@@ -14,12 +14,12 @@ int isVisited(int *visited, int index){
     return 0;
 }
 
-int findNearest(int startCityCity, double *graph, int *visited) {
+int findNearest(int currentCity, double *graph, int *visited) {
     double shortestPath = 999999999.0;
     int minIndex = 0;
 
     for (int i = 0; i < size; i++) {
-        if (i != startCityCity && isVisited(visited, i) == 0 && graph[i] < shortestPath) {
+        if (i != currentCity && isVisited(visited, i) == 0 && graph[i] < shortestPath) {
             minIndex = i;
             shortestPath = graph[i];
         }
@@ -37,7 +37,7 @@ void greedy(double **graph, int startCity, char *city[100]) {
     visited[0] = startCity;
 
     for (int i = 1; i < size; i++) {
-        visited[i] = findNearest(startCity, graph[currentCity], visited);
+        visited[i] = findNearest(currentCity, graph[currentCity], visited);
         totalDistance += graph[currentCity][visited[i]];
         currentCity = visited[i];
     }
