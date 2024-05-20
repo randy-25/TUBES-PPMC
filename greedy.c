@@ -1,3 +1,9 @@
+/*
+Nama: Riswandha Mashuri
+NIM: 13222002
+Deskripsi Program: Program yang berfungsi untuk mencari rute optimum lokal dengan cara menentukan nearest neighbor.
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

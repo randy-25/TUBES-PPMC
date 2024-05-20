@@ -1,3 +1,8 @@
+/*
+Nama: Riswandha Mashuri
+NIM: 13222002
+Deskripsi Program: File header yang digunakan untuk menghubungkan main.c dan greedy.c
+*/
 #ifndef GREEDY_H_
 #define GREEDY_H_
 
