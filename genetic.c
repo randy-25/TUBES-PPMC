@@ -1,3 +1,7 @@
+// Nama: Muhammad Sheva Hermanto Putra
+// NIM: 13222010
+// Deskripsi Program: Algoritma Genetika
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,14 +10,15 @@
 
 #include "genetic.h"
 
-#define POP_SIZE 100
-#define GENERATIONS 500
-#define MUTATION_RATE 0.1
-#define TOURNAMENT_SIZE 5
+#define POPULATION_SIZE 200
+#define GENERATIONS 200
+#define MUTATION_RATE 0.3
+#define SELECTION_SIZE 30
 
 extern int size;
 
 double fitness(int *route, double **graph) {
+    // Menghitung jarak sebuah rute
     double totalDistance = 0;
     for (int i = 0; i < size - 1; i++) {
         totalDistance += graph[route[i]][route[i + 1]];
@@ -22,10 +27,11 @@ double fitness(int *route, double **graph) {
     return totalDistance;
 }
 
-void generateRandomRoute(int *route) {
+void randomSolution(int *route) {
     for (int i = 0; i < size; i++) {
         route[i] = i;
     }
+    // Solusi random dibuat dengan menukar urutan kota secara random
     for (int i = size - 1; i > 0; i--) {
         int j = rand() % (i + 1);
         int temp = route[i];
@@ -35,6 +41,7 @@ void generateRandomRoute(int *route) {
 }
 
 void crossover(int *parent1, int *parent2, int *child) {
+    // Ambil potongan rute urut acak dari parent1
     int start = rand() % size;
     int end = rand() % size;
     if (start > end) {
@@ -42,12 +49,15 @@ void crossover(int *parent1, int *parent2, int *child) {
         start = end;
         end = temp;
     }
+    // Buat array yang menandai suatu kota sudah ada dalam rute atau belum
     int visited[size];
     memset(visited, 0, sizeof(visited));
+    // Memasukkan potongan parent1 ke individu baru
     for (int i = start; i <= end; i++) {
         child[i] = parent1[i];
         visited[parent1[i]] = 1;
     }
+    // Masukkan kota dari parent2 untuk yang belum ada pada individu baru
     int index = (end + 1) % size;
     for (int i = 0; i < size; i++) {
         int city = parent2[(end + 1 + i) % size];
@@ -59,7 +69,8 @@ void crossover(int *parent1, int *parent2, int *child) {
 }
 
 void mutate(int *route) {
-    if ((double)rand() / RAND_MAX < MUTATION_RATE) {
+    // Melakukan mutasi sesuai dengan mutation rate
+    if ((rand() % 100) / 100 < MUTATION_RATE) {
         int i = rand() % size;
         int j = rand() % size;
         int temp = route[i];
@@ -68,10 +79,11 @@ void mutate(int *route) {
     }
 }
 
-void tournamentSelection(int **population, double **graph, int *best) {
-    int bestIndex = rand() % POP_SIZE;
-    for (int i = 1; i < TOURNAMENT_SIZE; i++) {
-        int index = rand() % POP_SIZE;
+void selection(int **population, double **graph, int *best) {
+    // Mmeilih beberapa individu random yang kemudian akan dipilih individu dengan jarak terpendek
+    int bestIndex = rand() % POPULATION_SIZE;
+    for (int i = 1; i < SELECTION_SIZE; i++) {
+        int index = rand() % POPULATION_SIZE;
         if (fitness(population[index], graph) < fitness(population[bestIndex], graph)) {
             bestIndex = index;
         }
@@ -80,41 +92,43 @@ void tournamentSelection(int **population, double **graph, int *best) {
 }
 
 void geneticAlgorithm(double **graph, int kotaAwal, char *namaKota[100]) {
-    int **population = (int **)malloc(POP_SIZE * sizeof(int *));
-    for (int i = 0; i < POP_SIZE; i++) {
+    // Inisiasi populasi awal berisi solusi acak
+    int **population = (int **)malloc(POPULATION_SIZE * sizeof(int *));
+    for (int i = 0; i < POPULATION_SIZE; i++) {
         population[i] = (int *)malloc(size * sizeof(int));
-        generateRandomRoute(population[i]);
+        randomSolution(population[i]);
     }
     
-    int *newPopulation[POP_SIZE];
-    for (int i = 0; i < POP_SIZE; i++) {
+    int *newPopulation[POPULATION_SIZE];
+    for (int i = 0; i < POPULATION_SIZE; i++) {
         newPopulation[i] = (int *)malloc(size * sizeof(int));
     }
-
+    // Kembangkan populasi awal menjadi populasi baru sebanyak generasi yang diinginkan
     for (int generation = 0; generation < GENERATIONS; generation++) {
-        for (int i = 0; i < POP_SIZE; i++) {
+        for (int i = 0; i < POPULATION_SIZE; i++) {
+            // Pengembangan dilakukan dengan cara seleksi, crossover, dan mutasi
             int parent1[size], parent2[size];
-            tournamentSelection(population, graph, parent1);
-            tournamentSelection(population, graph, parent2);
+            selection(population, graph, parent1);
+            selection(population, graph, parent2);
             crossover(parent1, parent2, newPopulation[i]);
             mutate(newPopulation[i]);
         }
 
-        for (int i = 0; i < POP_SIZE; i++) {
+        for (int i = 0; i < POPULATION_SIZE; i++) {
             memcpy(population[i], newPopulation[i], size * sizeof(int));
         }
     }
-
+    // Diperoleh populasi terbaik kemudian cari solusi terbaik dalam populasi tersebut
     int *bestRoute = population[0];
     double bestDistance = fitness(bestRoute, graph);
-    for (int i = 1; i < POP_SIZE; i++) {
+    for (int i = 1; i < POPULATION_SIZE; i++) {
         double currentDistance = fitness(population[i], graph);
         if (currentDistance < bestDistance) {
             bestDistance = currentDistance;
             bestRoute = population[i];
         }
     }
-
+    // Susun solusi sesuai dengan kota awal yang diinput
     int indexKotaAwal = 0;
     while (bestRoute[indexKotaAwal] != kotaAwal) {
         indexKotaAwal++;
@@ -133,7 +147,7 @@ void geneticAlgorithm(double **graph, int kotaAwal, char *namaKota[100]) {
     printf("\nBest route distance: %lf\n", bestDistance);
 
     free(population);
-    for (int i = 0; i < POP_SIZE; i++) {
+    for (int i = 0; i < POPULATION_SIZE; i++) {
         free(newPopulation[i]);
     }
     free(finalRoute);
