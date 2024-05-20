@@ -1,3 +1,7 @@
+// Nama: Muhammad Sheva Hermanto Putra
+// NIM: 13222010
+// Deskripsi Program: Algoritma Genetika
+
 #ifndef GENETIC_H_
 #define GENETIC_H_
 
