@@ -1,3 +1,10 @@
+/*
+Nama : Shalawatul Shafa
+NIM : 13222007
+Deskripsi Program: algoritma ant colony optimization yang dapat menyelesaikan permasalahan Travelling Salesman Problem.algoritma ini menggunakan 
+                  konsep semut untuk mencari rute terpendek dalam mencari makanan,rute yang dipilih menggunakan perbandingan probabilitas pengaruh penanda
+                  /feromon.
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
