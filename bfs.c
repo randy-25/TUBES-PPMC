@@ -1,7 +1,7 @@
 /*
 Nama : Randy Revaldo Pratama
 NIM  : 13222012
-Program untuk menyelesaikan TSP menggunakan BFS
+Program untuk menyelesaikan TSP menggunakan BFS, yaitu dengan membuat sebuah tree dari adjacent matrix dan mencari path terpendek, dengan traversal secara BFS atau menyebar.
 */
 
 #include <stdio.h>
