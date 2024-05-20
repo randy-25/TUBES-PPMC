@@ -1,3 +1,18 @@
+/*
+KELOMPOK A3
+Nama Anggota:
+Riswandha Mashuri (13222002)
+Nabiel Aufi Danendra (13222005)
+Shalawatul Shafa (13222007)
+Muhammad Sheva Hermanto Putra (13222010)
+Randy Revaldo Pratama(13222012)
+
+Soal 02 - TSP
+Mencari kemungkinan jalur terpendek dari problem TSP dengan pendekatan algoritma Greedy, Brute Force, BFS, DFS, Ant Colony, Branch and Bound, dan Genetic Algorithm
+
+Main Program sebagai penghubung antara algoritma dan file eksternal
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

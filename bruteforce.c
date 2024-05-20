@@ -1,3 +1,9 @@
+/*
+Nama : Randy Revaldo Pratama
+NIM  : 13222012
+Program untuk menyelesaikan TSP menggunakan algoritma Brute Force yaitu dengan mencoba semua kemungkinan path yang ada
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "bruteforce.h"

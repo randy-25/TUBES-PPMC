@@ -1,3 +1,9 @@
+/*
+Nama : Randy Revaldo Pratama
+NIM  : 13222012
+Program ini adalah program sampingan sebagai antisipasi untuk BFS yang tidak dapat digunakan secara langsung jika tidak dijalankan dengan tombol run di vscode
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

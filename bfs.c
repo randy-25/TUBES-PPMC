@@ -1,3 +1,9 @@
+/*
+Nama : Randy Revaldo Pratama
+NIM  : 13222012
+Program untuk menyelesaikan TSP menggunakan BFS
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "bfs.h"

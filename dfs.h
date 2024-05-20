@@ -1,3 +1,9 @@
+/*
+Nama : Randy Revaldo Pratama
+NIM  : 13222012
+Header File dari dfs.c untuk penghubung ke main program
+*/
+
 #ifndef DFS_H
 #define DFS_H
 
@@ -15,11 +21,8 @@ typedef struct dfsTree
 
 struct dfsTree *createNodeDFS(int data);
 void DFS(double **graph, char *namaKota[100], int startVertex);
-struct dfsTree *createTreeDFS(struct dfsTree *root, double **adjMatrix, int startVertex);
-void DFSTree(struct dfsTree **tree, double **adjMatrix, int startVertex);
-void findMinDistanceDFS(struct dfsTree *tree, int startVertex, double **adjMatrix, char *namaKota[100]);
-int countDepthDFS(int maxSize);
-void printTreeDFS(struct dfsTree *tree);
+struct dfsTree *createTreeDFS(struct dfsTree *root, double **adjMatrix, int startVertex, double *minDistance, int *shortestPath);
+void DFSTree(struct dfsTree **tree, double **adjMatrix, int startVertex, double *minDistance, int *shortestPath, int starterIndex);
 void freeTreeDFS(struct dfsTree *tree);
 
 #endif
