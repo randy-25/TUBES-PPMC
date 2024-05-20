@@ -1,3 +1,14 @@
+/*
+    Nama                : Nabiel Aufi Danendra
+    NIM                 : 13222005
+    Deskripsi Program   : Mencari minimum distance dan rute terbaik untuk memecahkan Travelling Salesman Problem
+                          menggunakan algoritma Branch and Bound. Algoritma Branch and Bound bekerja dengan cara 
+                          membuat sebuah search space tree. Pada awalnya, dihitung lower bound. Tiap vertex dari
+                          search space tree dikunjungi dan dilakukan update pada lower bound. Jika jumlah lower
+                          bound dan weight saat ini kurang dari final weight terbaik, maka node tersebut dieksplor
+                          lebih lanjut. Jika tidak, maka node diabaikan 
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
